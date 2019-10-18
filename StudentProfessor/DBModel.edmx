@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="StudentProfessorModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="courseTable">
+          <Key>
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="CourseId" Type="int" Nullable="false" />
+          <Property Name="CourseName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="studentEnrolTable">
+          <Key>
+            <PropertyRef Name="EnrolId" />
+          </Key>
+          <Property Name="EnrolId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CourseId" Type="int" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="studentTable">
+          <Key>
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="StudentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StudentName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="tblProfessor">
+          <Key>
+            <PropertyRef Name="ProfessorId" />
+          </Key>
+          <Property Name="ProfessorId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CourseId" Type="int" Nullable="false" />
+          <Property Name="ProfessorName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_studentEnrolTable_courseTable">
+          <End Role="courseTable" Type="Self.courseTable" Multiplicity="1" />
+          <End Role="studentEnrolTable" Type="Self.studentEnrolTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="courseTable">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="studentEnrolTable">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_studentEnrolTable_studentTable">
+          <End Role="studentTable" Type="Self.studentTable" Multiplicity="1" />
+          <End Role="studentEnrolTable" Type="Self.studentEnrolTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="studentTable">
+              <PropertyRef Name="StudentId" />
+            </Principal>
+            <Dependent Role="studentEnrolTable">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblProfessor_courseTable">
+          <End Role="courseTable" Type="Self.courseTable" Multiplicity="1" />
+          <End Role="tblProfessor" Type="Self.tblProfessor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="courseTable">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="tblProfessor">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StudentProfessorModelStoreContainer">
+          <EntitySet Name="courseTable" EntityType="Self.courseTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="studentEnrolTable" EntityType="Self.studentEnrolTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="studentTable" EntityType="Self.studentTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblProfessor" EntityType="Self.tblProfessor" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_studentEnrolTable_courseTable" Association="Self.FK_studentEnrolTable_courseTable">
+            <End Role="courseTable" EntitySet="courseTable" />
+            <End Role="studentEnrolTable" EntitySet="studentEnrolTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_studentEnrolTable_studentTable" Association="Self.FK_studentEnrolTable_studentTable">
+            <End Role="studentTable" EntitySet="studentTable" />
+            <End Role="studentEnrolTable" EntitySet="studentEnrolTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblProfessor_courseTable" Association="Self.FK_tblProfessor_courseTable">
+            <End Role="courseTable" EntitySet="courseTable" />
+            <End Role="tblProfessor" EntitySet="tblProfessor" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StudentProfessorModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="courseTable">
+          <Key>
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="CourseId" Type="Int32" Nullable="false" />
+          <Property Name="CourseName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="studentEnrolTables" Relationship="Self.FK_studentEnrolTable_courseTable" FromRole="courseTable" ToRole="studentEnrolTable" />
+          <NavigationProperty Name="tblProfessors" Relationship="Self.FK_tblProfessor_courseTable" FromRole="courseTable" ToRole="tblProfessor" />
+        </EntityType>
+        <EntityType Name="studentEnrolTable">
+          <Key>
+            <PropertyRef Name="EnrolId" />
+          </Key>
+          <Property Name="EnrolId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CourseId" Type="Int32" Nullable="false" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="courseTable" Relationship="Self.FK_studentEnrolTable_courseTable" FromRole="studentEnrolTable" ToRole="courseTable" />
+          <NavigationProperty Name="studentTable" Relationship="Self.FK_studentEnrolTable_studentTable" FromRole="studentEnrolTable" ToRole="studentTable" />
+        </EntityType>
+        <EntityType Name="studentTable">
+          <Key>
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="StudentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="studentEnrolTables" Relationship="Self.FK_studentEnrolTable_studentTable" FromRole="studentTable" ToRole="studentEnrolTable" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="tblProfessor">
+          <Key>
+            <PropertyRef Name="ProfessorId" />
+          </Key>
+          <Property Name="ProfessorId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CourseId" Type="Int32" Nullable="false" />
+          <Property Name="ProfessorName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="courseTable" Relationship="Self.FK_tblProfessor_courseTable" FromRole="tblProfessor" ToRole="courseTable" />
+        </EntityType>
+        <Association Name="FK_studentEnrolTable_courseTable">
+          <End Role="courseTable" Type="Self.courseTable" Multiplicity="1" />
+          <End Role="studentEnrolTable" Type="Self.studentEnrolTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="courseTable">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="studentEnrolTable">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblProfessor_courseTable">
+          <End Role="courseTable" Type="Self.courseTable" Multiplicity="1" />
+          <End Role="tblProfessor" Type="Self.tblProfessor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="courseTable">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="tblProfessor">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_studentEnrolTable_studentTable">
+          <End Role="studentTable" Type="Self.studentTable" Multiplicity="1" />
+          <End Role="studentEnrolTable" Type="Self.studentEnrolTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="studentTable">
+              <PropertyRef Name="StudentId" />
+            </Principal>
+            <Dependent Role="studentEnrolTable">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StudentProfessorEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="courseTables" EntityType="Self.courseTable" />
+          <EntitySet Name="studentEnrolTables" EntityType="Self.studentEnrolTable" />
+          <EntitySet Name="studentTables" EntityType="Self.studentTable" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="tblProfessors" EntityType="Self.tblProfessor" />
+          <AssociationSet Name="FK_studentEnrolTable_courseTable" Association="Self.FK_studentEnrolTable_courseTable">
+            <End Role="courseTable" EntitySet="courseTables" />
+            <End Role="studentEnrolTable" EntitySet="studentEnrolTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblProfessor_courseTable" Association="Self.FK_tblProfessor_courseTable">
+            <End Role="courseTable" EntitySet="courseTables" />
+            <End Role="tblProfessor" EntitySet="tblProfessors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_studentEnrolTable_studentTable" Association="Self.FK_studentEnrolTable_studentTable">
+            <End Role="studentTable" EntitySet="studentTables" />
+            <End Role="studentEnrolTable" EntitySet="studentEnrolTables" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StudentProfessorModelStoreContainer" CdmEntityContainer="StudentProfessorEntities">
+          <EntitySetMapping Name="courseTables">
+            <EntityTypeMapping TypeName="StudentProfessorModel.courseTable">
+              <MappingFragment StoreEntitySet="courseTable">
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="CourseName" ColumnName="CourseName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="studentEnrolTables">
+            <EntityTypeMapping TypeName="StudentProfessorModel.studentEnrolTable">
+              <MappingFragment StoreEntitySet="studentEnrolTable">
+                <ScalarProperty Name="EnrolId" ColumnName="EnrolId" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="studentTables">
+            <EntityTypeMapping TypeName="StudentProfessorModel.studentTable">
+              <MappingFragment StoreEntitySet="studentTable">
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="StudentName" ColumnName="StudentName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="StudentProfessorModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblProfessors">
+            <EntityTypeMapping TypeName="StudentProfessorModel.tblProfessor">
+              <MappingFragment StoreEntitySet="tblProfessor">
+                <ScalarProperty Name="ProfessorId" ColumnName="ProfessorId" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="ProfessorName" ColumnName="ProfessorName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
